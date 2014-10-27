@@ -24,7 +24,7 @@ ogr2ogr \
 
 topojson \
   -o data/geo/topojson/na.json \
-  --id_property SU_A3 \
+  --id-property SU_A3 \
   --properties name=NAME \
   -- \
   data/geo/geojson/subunits.json \

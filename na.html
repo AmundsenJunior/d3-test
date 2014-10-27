@@ -4,7 +4,14 @@
   <head>
     <meta charset="utf-8">
     <style>
-
+      .subunit.USB,
+      .subunit.USH,
+      .subunit.USK {
+        fill: #ddc;
+      }
+      .subunit.CAN {
+        fill: #dcd;
+      }
     </style>
   </head>
 
@@ -31,9 +38,10 @@
         if (error) return console.error(error);
 
         var subunits = topojson.feature(na, na.objects.subunits);
-
-        svg.append("path")
-          .datum(subunits)
+        svg.selectAll(".subunit")
+          .data(subunits.features)
+          .enter().append("path")
+          .attr("class", function(d) {return "subunit " + d.id; })
           .attr("d", path);
       });
     </script>
