@@ -16,11 +16,15 @@ ogr2ogr \
   data/geo/geojson/subunits.json \
   data/geo/shapefile/ne_10m_admin_0_map_subunits/ne_10m_admin_0_map_subunits.shp
 
+echo "Completed subunits GeoJSON conversion."
+
 ogr2ogr \
   -f GeoJSON \
-  -where "ISO_A2 IN ('US', 'CA') AND SCALERANK < 8" \
+  -where "ISO_A2 IN ('US', 'CA') AND SCALERANK < 3" \
   data/geo/geojson/places.json \
   data/geo/shapefile/ne_10m_populated_places/ne_10m_populated_places.shp
+
+echo "Completed places GeoJSON conversoin."
 
 topojson \
   -o data/geo/topojson/na.json \
@@ -30,4 +34,5 @@ topojson \
   data/geo/geojson/subunits.json \
   data/geo/geojson/places.json
 
+echo "Completed TopoJSON conversion."
 
