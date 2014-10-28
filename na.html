@@ -57,6 +57,8 @@
           .attr("d", path)
           .attr("class", "place");
 
+        console.log(path.pointRadius);
+
         svg.selectAll(".place-label")
           .data(places.features)
           .enter().append("text")
