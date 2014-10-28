@@ -16,15 +16,19 @@ ogr2ogr \
   data/geo/geojson/subunits.json \
   data/geo/shapefile/ne_10m_admin_0_map_subunits/ne_10m_admin_0_map_subunits.shp
 
-echo "Completed subunits GeoJSON conversion."
+if [ -e "data/geo/geojson/subunits.json" ]; then
+  echo "Completed subunits GeoJSON conversion."
+fi
 
 ogr2ogr \
   -f GeoJSON \
   -where "iso_a2 IN ('US', 'CA', 'MX')" \
-  data/geo/geojson/states-provinces.json \
+  data/geo/geojson/states_provinces.json \
   data/geo/shapefile/ne_10m_admin_1_states_provinces/ne_10m_admin_1_states_provinces.shp
 
-echo "Completed states-provinces GeoJSON conversion."
+if [ -e "data/geo/geojson/states_provinces.json" ]; then
+  echo "Completed states-provinces GeoJSON conversion."
+fi
 
 ogr2ogr \
   -f GeoJSON \
@@ -32,7 +36,9 @@ ogr2ogr \
   data/geo/geojson/places.json \
   data/geo/shapefile/ne_10m_populated_places/ne_10m_populated_places.shp
 
-echo "Completed places GeoJSON conversion."
+if [ -e "data/geo/geojson/places.json" ]; then
+  echo "Completed places GeoJSON conversion."
+fi
 
 topojson \
   -o data/geo/topojson/na.json \
@@ -42,5 +48,7 @@ topojson \
   data/geo/geojson/subunits.json \
   data/geo/geojson/places.json
 
-echo "Completed TopoJSON conversion."
+if [ -e "data/geo/topojson/na.json" ]; then
+  echo "Completed TopoJSON conversion."
+fi
 
