@@ -1,12 +1,37 @@
 /* North America SVG */
 
+body {
+  font-family: 'Open Sans', sans-serif;
+}
+
+svg {
+  background: #4682b4;
+}
+
+.subunit {
+  stroke: #c0c0c0;
+  stroke-width: .5px;
+}
+
 .subunit.USB,
 .subunit.USH,
 .subunit.USK {
-  fill: #ddc;
+  fill: #989898;
 }
 
 .subunit.CAN {
-  fill: #dcd;
+  fill: #585858;
+}
+
+.subunit-label {
+  fill: #000000;
+  fill-opacity: .5;
+  font-size: 20px;
+  font-weight: 700;
+  text-anchor: middle;
+}
+
+.place-label {
+  font-size: 9px;
 }
 

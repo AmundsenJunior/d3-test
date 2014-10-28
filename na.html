@@ -11,14 +11,21 @@
     <!-- North America SVG -->
     <link href="public/css/na.css" rel="stylesheet">
 
+    <!-- Open Sans Font -->
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,400italic,600,600italic,300italic,300,700,700italic,800,800italic" rel="stylesheet">
+ 
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="http://d3js.org/topojson.v1.min.js"></script>
+
   </head>
 
   <body>
-    <script src="http://d3js.org/d3.v3.min.js"></script>
-    <script src="http://d3js.org/topojson.v1.min.js"></script>
+
+    <h1>d3-test North America Map</h1>
+
     <script>
-      var width = 960,
-          height = 1000;
+      var width = 1060,
+          height = 800;
 
       var svg = d3.select("body").append("svg")
           .attr("width", width)
@@ -36,11 +43,44 @@
         if (error) return console.error(error);
 
         var subunits = topojson.feature(na, na.objects.subunits);
+        var places = topojson.feature(na, na.objects.places);
+
         svg.selectAll(".subunit")
           .data(subunits.features)
           .enter().append("path")
-          .attr("class", function(d) {return "subunit " + d.id; })
+          .attr("class", function(d) {
+            return "subunit " + d.id; })
           .attr("d", path);
+
+        svg.append("path")
+          .datum(places)
+          .attr("d", path)
+          .attr("class", "place");
+
+        svg.selectAll(".place-label")
+          .data(places.features)
+          .enter().append("text")
+          .attr("class", "place-label")
+          .attr("transform", function(d) {
+            return "translate(" + projection(d.geometry.coordinates) + ")"; })
+          .attr("x", function(d) {
+            return d.geometry.coordinates[0] > -1 ? 6 : -6; })
+          .attr("dy", ".35em")
+          .style("text-anchor", function(d) {
+            return d.geometry.coordinates[0] > -1 ? "start" : "end"; })
+          .text(function(d) {
+            return d.properties.name; });
+
+        svg.selectAll(".subunit-label")
+          .data(subunits.features)
+          .enter().append("text")
+          .attr("class", function(d) {
+            return "subunit-label " + d.id; })
+          .attr("transform", function(d) {
+            return "translate(" + path.centroid(d) + ")"; })
+          .attr("dy", ".35em")
+          .text(function(d) {
+            return d.properties.name; });
       });
     </script>
 
