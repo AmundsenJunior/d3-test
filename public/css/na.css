@@ -1,0 +1,12 @@
+/* North America SVG */
+
+.subunit.USB,
+.subunit.USH,
+.subunit.USK {
+  fill: #ddc;
+}
+
+.subunit.CAN {
+  fill: #dcd;
+}
+
