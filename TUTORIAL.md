@@ -29,15 +29,12 @@ Install VirtualBox Guest Additions
     
 apt updates
 
-
 	$ sudo apt-get update
 	$ sudo apt-get upgrade
-
 
 git
 
 	$ sudo apt-get install git
-
 
 ###Install Node.js and NPM
 https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-an-ubuntu-14-04-server
@@ -45,7 +42,6 @@ https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-an-ub
 	$ sudo apt-get update
 	$ sudo apt-get install -y nodejs
 	$ sudo apt-get install -y npm
-
 
 Confirm installation
 
@@ -56,10 +52,9 @@ http://stackoverflow.com/questions/21168141/can-not-install-packages-using-node-
 
 	$ sudo apt-get install -y nodejs-legacy
 
-###Installing D3 and dependencies for GeoJSON and SVG manipulation of datasets
+###Installing GeoJSON and TopoJSON
 http://bost.ocks.org/mike/map/
 
-GDAL
 The GDAL documentation on OpenGeo.org is very out-of-date, so after some failed apt-repo additions, then after trying to build from source, I found some up-to-date help:
 https://www.mapbox.com/tilemill/docs/guides/gdal/#linux
 
@@ -74,28 +69,29 @@ Confirm both installations:
 	$ which ogr2ogr
 	$ which topojson
 
+### Building the d3-test environment
+
 Up to this point, we've been working in systemwide processes, installing dependencies for our project. Next, let's clone the d3-test repository, and from this point on, work from the project directory root. On my machine, I usually create ```~/dev/``` directory for all my projects, then clone into there:
 
 	$ git clone https://github.com/AmundsenJunior/d3-test.git
 	$ cd d3-test
 
-
 Moving along with Bostock's tutorial, we'll next download a couple interesting shapefiles to start to play with. Once unpacked, we will then run through the conversion process to get them into TopoJSON format, useful for D3 processing and manipulation. The following seven shapefile sets will be downloaded.
 
-Cultural Vectors:
+*Cultural Vectors*:
 * Sovereign States and subunits: http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/ne_10m_admin_0_map_subunits.zip
 * States and Provinces: http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/ne_10m_admin_1_states_provinces.zip
 * Populated places: http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/ne_10m_populated_places.zip
 * Urban areas: http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/ne_10m_urban_areas.zip
 
-Physical Vectors:
+*Physical Vectors*:
 * Coastline: http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/physical/ne_10m_coastline.zip
 * Rivers and Lake centerlines: http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/physical/ne_10m_rivers_lake_centerlines.zip
 * Lakes and Reservoirs: http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/physical/ne_10m_lakes.zip
 
 The ```na-download.sh``` and ```na-unzip.sh``` Bash scripts have been built and executed. In their process, they make the appropriate directory structure in the project, download the Natural Earth zip files to ```data/geo/source/```, then unzip those files into subdirectories of ```data/geo/shapefile/```, one per zip file. The two files are executed from the project root, on the command line with the following:
 
-	$ bash nadownload.sh
+	$ bash na-download.sh
 	$ bash na-unzip.sh
 
 You can now run the ```na-convert-json.sh``` file in the same manner, and it will execute all the following steps to create two GeoJSON files, ```subunits.json``` and ```places.json```, then merge those into our new TopoJSON file, ```na.json```:
@@ -106,17 +102,17 @@ Converting data is a two-step process, first using ```ogr2ogr``` to convert shap
 
 (Use a backslash ('\') to write a command in the shell on multiple lines. The shell will automatically generate the right carets ('>') to prompt that it expects more for the command.)
 
-Again, the following commands are now executed by ```build/na-convert-json.sh```. We first select the 'USA' and 'CAN' objects from the ```...subunits.shp``` file, then create ```places.json``` by selecting all 'US' and 'CA' objects with a SCALERANK less than 8 (with 1 marking the largest class of places). In the script, this was later modified to ```SCALERANK < 3```, as the number of places that populated the map was exorbitant.
+Again, the following commands are now executed by ```build/na-convert-json.sh```. We first select the 'USA', 'CAN', and 'MEX' objects from the ```...subunits.shp``` file, then create ```places.json``` by selecting all 'US', 'CA', and 'MX' objects with a SCALERANK less than 8 (with 1 marking the largest class of places). In the script, this was later modified to ```SCALERANK < 3```, as the number of places that populated the map was exorbitant.
 
 	$ ogr2ogr \
 	> -f GeoJSON \
-	> -where "ADM0_A3 IN ('USA', 'CAN')" \
+	> -where "ADM0_A3 IN ('USA', 'CAN', 'MEX')" \
 	> subunits.json \
 	> data/geo/shapefile/ne_10m_admin_0_map_subunits/ne_10m_admin_0_map_subunits.shp
 
 	$ ogr2ogr \
 	> -f GeoJSON \
-	> -where "ISO_A2 IN ('US', 'CA') AND SCALERANK < 8" \
+	> -where "ISO_A2 IN ('US', 'CA', 'MX') AND SCALERANK < 8" \
 	> places.json \
 	> data/geo/shapefile/ne_10m_populated_places\ne_10m_populated_places.shp
 
